@@ -21,12 +21,14 @@
           <el-form-item>
             <el-button style="width:350px" type="primary" @click="login">登录</el-button>
           </el-form-item>
+          <el-button @click="testAjax">测试接口</el-button>
         </el-form>
       </el-card>
     </div>
   </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
   name: 'Login',
   data() {
@@ -75,8 +77,22 @@ export default {
     login() {
       this.$refs.form.validate((isOK) => {
         if (isOK) {
-          alert('校验通过')
+          // alert('校验通过')
+          //调用store中user.js中actions中的方法login
+          this.$store.dispatch('user/login',this.loginForm)
         }
+      })
+    },
+    testAjax(){
+      axios({
+        // url:'https://heimahr.itheima.net/api/sys/login',
+        url:'/api/sys/login',//http://localhost:9528/api/sys/login==因为vue.config.js配置了代理==>https://heimahr.itheima.net/api/sys/login
+        method:'post',
+        data:{
+          moblie:'13912345678',
+          password:'123456'
+        }
+
       })
     }
   }

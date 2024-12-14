@@ -36,7 +36,15 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+    //前端用vue-cli配置代理服务器(需要重启项目)，这样后端就不用跨域cors了
+    proxy:{
+      //path:目标服务器  百度 新浪 网易。。。可以配置多个
+      '/api':{//因为我们请求的地址都有/api
+        target:'https://heimahr.itheima.net/'
+        
+      }
+    }
+    // before: require('./mock/mock-server.js')//基础模板做的数据模拟，会拦截我们对后端的请求
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
