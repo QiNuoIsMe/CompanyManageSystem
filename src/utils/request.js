@@ -2,7 +2,8 @@ import store from '@/store'
 import axios from 'axios'
 import { Message } from 'element-ui'
 const service = axios.create({
-  baseURL:'/api',// 基础地址
+  // baseURL:'/api',// 基础地址
+  baseURL:process.env.VUE_APP_BASE_API,// 基础地址(不同环境下基础地址不同)(开发/生产环境)
   timeout:10000// 超时，单位毫秒，10000ms=10s
 })// 创建一个新的axios实例
 
