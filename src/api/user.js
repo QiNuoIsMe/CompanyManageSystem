@@ -1,24 +1,14 @@
+//请求模块api
 import request from '@/utils/request'
 
 export function login(data) {
+  //返回数据(promise对象)
   return request({
-    url: '/vue-admin-template/user/login',
+    //后端网址-https://heimahr.itheima.net/api/sys/login
+    url: 'sys/login',
     method: 'post',
-    data
+    data // data:data
   })
+
 }
 
-export function getInfo(token) {
-  return request({
-    url: '/vue-admin-template/user/info',
-    method: 'get',
-    params: { token }
-  })
-}
-
-export function logout() {
-  return request({
-    url: '/vue-admin-template/user/logout',
-    method: 'post'
-  })
-}

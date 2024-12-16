@@ -33,10 +33,10 @@ export default {
   name: 'Login',
   data() {
     return {
-      loginForm: {
-        mobile: '',
-        password: '',
-        isAgree: false
+      loginForm: {//只在开发环境默认填上用户名和密码
+        mobile: process.env.NODE_ENV === 'develpoment' ? '13800000002':'',
+        password: process.env.NODE_ENV === 'develpoment' ? 'hm#qd@23!' : '',
+        isAgree: process.env.NODE_ENV === 'develpoment' // process.env.NODE_ENV === 'develpoment' ? true :false
       },
       loginRules: {
         mobile: [{
@@ -78,11 +78,14 @@ export default {
   // },
   methods: {
     login() {
-      this.$refs.form.validate((isOK) => {
+      this.$refs.form.validate(async(isOK) => {
         if (isOK) {
           // alert('校验通过')
           // 调用store中user.js中actions中的方法login
-          this.$store.dispatch('user/login', this.loginForm)
+          await this.$store.dispatch('user/login', this.loginForm)
+          //Vuex中的action返回的是promise对象
+          //跳转主页
+          this.$router.push('/')//在router中查看登录的地址
         }
       })
     },
