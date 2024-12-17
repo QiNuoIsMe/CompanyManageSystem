@@ -8,7 +8,8 @@
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper"><!--头像-->
           <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
-          <img :src="avatar" class="user-avatar">
+          <img v-if="avatar" :src="avatar" class="user-avatar"><!--用户头像非空，显示头像-->
+          <span v-else class="username">{{name?.charAt(0)}}</span><!--用户头像为空，使用用户名的第一个字作为头像。此处使用可选链操作符?-->
           <!-- 用户名称 （文本插值）-->
           <span class="name">{{name}}</span>
           <!-- 图标 -->
@@ -127,6 +128,16 @@ export default {
         display:flex;
         align-items: center;
 
+        .username{
+          width:30px;
+          height: 30px;
+          text-align: center;//文字居中
+          color: #fff;
+          line-height: 30px;//垂直居中
+          background-color: #04c9be;
+          border-radius: 50%;//圆角
+          margin-right: 4px;//距离右边距4px
+        }
         .name{
           margin-right:10px;
           font-size: 16px;
