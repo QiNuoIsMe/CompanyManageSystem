@@ -1,3 +1,4 @@
+import router from '@/router'
 import store from '@/store'
 import axios from 'axios'
 import { Message } from 'element-ui'
@@ -35,6 +36,13 @@ service.interceptors.response.use((response)=>{
   }
 },(error)=>{
   // debugger
+  if(error.response.status === 401){  //说明token超时/失效了
+    Message({type:'warning',message:'token超时了'})//提示消息
+    store.dispatch('user/logout')//调用store下user.js中的actions方法logout(删token和用户信息)，退出登录
+    //主动跳转登录页
+    router.push('/login')//路由 跳转到登录页
+    return Promise.reject(error)//直接返回，下面的消息提醒则不会执行
+  }
   // 提示错误消息error.message。之前是this.$message.warning()。
   // 此处引入element-ui中Message方法
   Message({type:'error',message:error.message})

@@ -12,7 +12,7 @@ const mutations={
     //同步到缓存(调用@/utils/auth.js中的setToken)
     setToken(token)
   },
-  removeToken(){
+  removeToken(state){
     //删除Vuex的token
     state.token=null
     removeToken
@@ -37,6 +37,11 @@ const actions={
   async getUserInfo(context){
     const result = await getUserInfo()//导入api/user.js中的getUserInfo方法
     context.commit("setUserInfo",result)//调用mutation中setUserInfo方法，进行提交(将数据共享到vuex上)
+  },
+  //退出登录
+  logout(context){
+    context.commit('removeToken')//删除token
+    context.commit('setUserInfo',{})//将用户信息设置为空
   }
 }
 
