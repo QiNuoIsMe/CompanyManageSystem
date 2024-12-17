@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Dashboard',
@@ -13,6 +13,11 @@ export default {
     ...mapGetters([
       'name'
     ])
+  },
+  //
+  created(){
+    //初始化执行
+    this.$store.dispatch('user/getUserInfo')//调用 模块名/actions名
   }
 }
 </script>

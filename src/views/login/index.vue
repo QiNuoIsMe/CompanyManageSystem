@@ -34,9 +34,9 @@ export default {
   data() {
     return {
       loginForm: {//只在开发环境默认填上用户名和密码
-        mobile: process.env.NODE_ENV === 'develpoment' ? '13800000002':'',
-        password: process.env.NODE_ENV === 'develpoment' ? 'hm#qd@23!' : '',
-        isAgree: process.env.NODE_ENV === 'develpoment' // process.env.NODE_ENV === 'develpoment' ? true :false
+        mobile: process.env.NODE_ENV === 'development' ? '13800000002':'',
+        password: process.env.NODE_ENV === 'development' ? 'hm#qd@23!' : '',
+        isAgree: process.env.NODE_ENV === 'development' // process.env.NODE_ENV === 'develpoment' ? true :false
       },
       loginRules: {
         mobile: [{

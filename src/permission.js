@@ -8,7 +8,7 @@ import 'nprogress/nprogress.css';
  * 前置守卫（参数是一个回调函数）
 */
 const whiteList = ['/login','/404']// 白名单的路径
-router.beforeEach((to,from,next) =>{//to去的路径，from从哪来
+router.beforeEach(async (to,from,next) =>{//to去的路径，from从哪来
   nprogress.start()// 开启进度条
   if(store.getters.token){
     //存在token
@@ -19,6 +19,10 @@ router.beforeEach((to,from,next) =>{//to去的路径，from从哪来
       nprogress.done()// 解决手动输入地址时，进度条不关闭的问题
       
     }else{
+      //判断是否获取过资料
+      if(!store.getters.userId) {
+         await store.dispatch("user/getUserInfo")//await获取完资料再去完成跳转
+       }
       //next() 无地址默认执行后置守卫
       next()// 放行
     }

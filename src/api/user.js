@@ -9,6 +9,12 @@ export function login(data) {
     method: 'post',
     data // data:data
   })
+}
 
+export function getUserInfo(){
+  return request({
+    url: '/sys/profile',//地址再后端接口文档中用户相关/获取用户信息里
+    method: 'get'//不写默认get
+  })
 }
 

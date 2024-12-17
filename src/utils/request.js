@@ -14,7 +14,7 @@ service.interceptors.request.use((config)=>{
   // this.$store.getters但是这里不是组件，是actions。所以使用导出的store
   // store.getter.token => 将toekn放入请求头里面
   if(store.getters.token){
-    config.headers.Authorization = 'Bearer ${store.getters.token}'
+    config.headers.Authorization = `Bearer ${store.getters.token}`// 使用反引号进行模板字符串插值
   }
   return config
 },(error)=>{

@@ -6,9 +6,13 @@
 
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
-        <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
+        <div class="avatar-wrapper"><!--头像-->
+          <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
+          <img :src="avatar" class="user-avatar">
+          <!-- 用户名称 （文本插值）-->
+          <span class="name">{{name}}</span>
+          <!-- 图标 -->
+          <i class="el-icon-setting" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
@@ -32,9 +36,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -42,9 +46,11 @@ export default {
     Hamburger
   },
   computed: {
+    //辅助函数。引入modules中getters暴露的属性
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',//用户头像
+      'name'//用户名称
     ])
   },
   methods: {
@@ -117,12 +123,22 @@ export default {
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
+        //水平居中显示
+        display:flex;
+        align-items: center;
 
+        .name{
+          margin-right:10px;
+          font-size: 16px;
+        }
+        .el-icon-setting{
+          font-size: 20px;
+        }
         .user-avatar {
           cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
         }
 
         .el-icon-caret-bottom {
