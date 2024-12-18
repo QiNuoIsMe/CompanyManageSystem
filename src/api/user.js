@@ -18,3 +18,11 @@ export function getUserInfo(){
   })
 }
 
+export function updatePassword(data){
+  return request({
+    url:'sys/user/updatePass',//地址再后端接口文档中修改密码里
+    method:'put',
+    data
+  })
+}
+

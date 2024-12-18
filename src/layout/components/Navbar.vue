@@ -24,7 +24,8 @@
           <a target="_blank" href="https://github.com/QiNuoIsMe/heimahr-01.git">
             <el-dropdown-item>项目地址</el-dropdown-item>
           </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
+          <!-- prevent阻止a标签的默认跳转事件，绑定@click事件 -->
+          <a target="_blank" @click.prevent="updatePassword">
             <el-dropdown-item>修改密码</el-dropdown-item>
           </a>
           <!-- native时间修饰符 -->
@@ -35,18 +36,71 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <!-- .sync修饰符——点击弹窗的叉号即可关闭弹窗。在源码是，外传了一个事件，我们监听该事件，并且把布尔值赋给showDialog -->
+    <!-- 监听事件@close，关闭弹窗时触发事件，调用btnCanel方法(重置表单并关闭弹窗) -->
+    <el-dialog @close="btnCanel" :visible.sync="showDialog" title="修改密码" width="500px">
+      <!-- 修改密码表单 -->
+      <el-form ref="passForm" label-width="120px" :model="passForm" :rules="rules"> 
+        <!-- ref绑定表单实例，命名为passForm。:model双向绑定表单数据(在data中)。:rules双向绑定校验规则(在data中) -->
+        <el-form-item label="旧密码" prop="oldPassword"><!--prop绑定字段oldPassword-->
+          <el-input v-model="passForm.oldPassword" show-password size="small"><!--v-model双向绑定表单数据passForm中的oldPassword-->
+          </el-input>
+        </el-form-item>
+        <el-form-item label="新密码" prop="newPassword">
+          <el-input v-model="passForm.newPassword" show-password size="small">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="重复密码" prop="confirmPassword">
+          <el-input v-model="passForm.confirmPassword" show-password size="small">
+          </el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="btnOk" size="mini" type="primary">确认修改</el-button>
+          <el-button @click="btnCanel" size="mini">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { updatePassword } from '@/api/user'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import { mapGetters } from 'vuex'
-
 export default {
   components: {
     Breadcrumb,
     Hamburger
+  },
+  data(){
+    return {
+      showDialog:false,//默认为false不显示弹出窗
+      //修改密码的表单数据
+      passForm:{
+        oldPassword:'',
+        newPassword:'',//属性名与后端接口接收的参数名保持一致
+        confirmPassword:''
+      },
+      //修改密码表单校验规则
+      rules:{//数组类型
+        oldPassword:[{required:true,message:'原密码不能为空',trigger:'blur'}],//required:true——必填项。trigger:'blur'，失去焦点时才触发该校验
+        newPassword:[{required:true,message:'新密码不能为空',trigger:'blur'},
+      {min:6,max:16,message:'新密码的长度为6-16位之间',trigger:'blur'}],
+        confirmPassword:[{required:true,message:'重复密码不能为空',trigger:'blur'},
+      {
+        validator: (rule,value,callback) =>{//自定义校验函数(这里若不使用使用箭头函数，则this并不是指向组件实例，无法引入newPassword)
+          //或者在data处，let _this=this，然后在这里调用_this.passForm.newPassword
+          if(value !== this.passForm.newPassword){
+            callback(new Error('两次输入密码不一致'))
+            return
+          }
+          callback()
+        },
+        trigger:'blur'
+      }]
+      }
+    }
   },
   computed: {
     //辅助函数。引入modules中getters暴露的属性
@@ -57,8 +111,26 @@ export default {
     ])
   },
   methods: {
+    updatePassword(){
+      //显示修改密码的弹出窗
+      this.showDialog = true
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
+    },
+    btnOk(){
+      this.$refs.passForm.validate( async isOk =>{
+        if(isOk){
+          await updatePassword(this.passForm)
+          //成功了
+          this.btnCanel()
+          this.$message.success('修改密码成功')
+        }
+      })
+    },
+    btnCanel(){
+      this.$refs.passForm.resetFields()//form表单中的方法--重置表单
+      this.showDialog = false//关闭弹窗
     },
     async logout() {
       //调用退出登录的action方法
