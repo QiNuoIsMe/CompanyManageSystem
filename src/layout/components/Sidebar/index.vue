@@ -12,6 +12,7 @@
         :collapse-transition="false"
         mode="vertical"
       >
+      <!-- 遍历路由信息，生成sidebar-item组件 routes数据在computed计算属性中 -->
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
@@ -19,10 +20,10 @@
 </template>
 
 <script>
+import variables from '@/styles/variables.scss'
 import { mapGetters } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
-import variables from '@/styles/variables.scss'
 
 export default {
   components: { SidebarItem, Logo },
@@ -30,7 +31,9 @@ export default {
     ...mapGetters([
       'sidebar'
     ]),
+    //路由信息的计算属性
     routes() {
+      //当前路由的所有路由信息
       return this.$router.options.routes
     },
     activeMenu() {

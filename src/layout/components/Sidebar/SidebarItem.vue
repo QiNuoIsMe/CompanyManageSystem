@@ -1,8 +1,10 @@
 <template>
+  <!-- 只有hidden为false undefined null(即不隐藏)时才渲染。该属性在路由router的js文件中hidden属性中 -->
   <div v-if="!item.hidden">
     <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
         <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
+          <!-- item为自定义组件，读取了路由中meta属性中的icon和title -->
           <item :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title" />
         </el-menu-item>
       </app-link>
@@ -25,11 +27,11 @@
 </template>
 
 <script>
-import path from 'path'
 import { isExternal } from '@/utils/validate'
+import path from 'path'
+import FixiOSBug from './FixiOSBug'
 import Item from './Item'
 import AppLink from './Link'
-import FixiOSBug from './FixiOSBug'
 
 export default {
   name: 'SidebarItem',

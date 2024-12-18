@@ -1,7 +1,7 @@
 <script>
 export default {
   name: 'MenuItem',
-  functional: true,
+  functional: true,// 函数式组件(用函数表示组件，此处为render函数)
   props: {
     icon: {
       type: String,
@@ -12,22 +12,25 @@ export default {
       default: ''
     }
   },
+  //渲染函数
   render(h, context) {
-    const { icon, title } = context.props
+    const { icon, title } = context.props//将图标 标题传入
     const vnodes = []
 
-    if (icon) {
+    if (icon) {//图标非空
+      // 包含字符串 'el-icon'，那么它可能是指 Element UI 库中的内置图标类名。此时，创建一个 <i> 标签(用于显示标签)，并为其添加两个 CSS 类：一个是传入的 icon，另一个是固定的 'sub-el-icon' 类。然后把这个元素推入 vnodes 数组。
       if (icon.includes('el-icon')) {
         vnodes.push(<i class={[icon, 'sub-el-icon']} />)
       } else {
-        vnodes.push(<svg-icon icon-class={icon}/>)
+        // 无'el-icon'，则假定这是一个自定义的 SVG 图标名称。全局组件svg-icon，传递图标名字icon
+        vnodes.push(<svg-icon icon-class={icon}/>)//渲染图标
       }
     }
 
     if (title) {
-      vnodes.push(<span slot='title'>{(title)}</span>)
+      vnodes.push(<span slot='title'>{(title)}</span>)//渲染标题
     }
-    return vnodes
+    return vnodes// 渲染节点
   }
 }
 </script>
