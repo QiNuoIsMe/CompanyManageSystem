@@ -7,6 +7,7 @@ Vue.use(Router)
 import Layout from '@/layout'
 import approvalRouter from './modules/approval'
 import attendanceRouter from './modules/attendance'
+import departmentRouter from './modules/department'
 import employeeRouter from './modules/employee'
 import permissionRouter from './modules/permission'
 import roleRouter from './modules/role'
