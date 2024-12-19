@@ -45,6 +45,7 @@
 import { getDepartment } from '@/api/department'; //引入封装好的api接口
 import { transListToTreeData } from '@/utils';
 import AddDept from './components/add-dept.vue'; //引入新增部门的组件add-dept.vue
+
 export default {
   name: 'Department',
   components:{ AddDept },//引入组件，可以作为标签<AddDept />
