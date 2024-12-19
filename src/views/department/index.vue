@@ -41,33 +41,34 @@ export default {
   name: 'Department',
   data(){
     return{
-        depts:[
-            {
-                name:'传智教育',
-                managerName:'管理员',//在后端接口-获取部门列表里的属性名一致，主管名称managerName
-                children:[{
-                    name:'总裁办',
-                    managerName:'张三',
-                },{
-                    name:'行政部',
-                    managerName:'李四',
+        depts:[],//组织架构的数据
+        // depts:[
+        //     {
+        //         name:'传智教育',
+        //         managerName:'管理员',//在后端接口-获取部门列表里的属性名一致，主管名称managerName
+        //         children:[{
+        //             name:'总裁办',
+        //             managerName:'张三',
+        //         },{
+        //             name:'行政部',
+        //             managerName:'李四',
 
-                },{
-                    name:'人事部',
-                    managerName:'王五',
-                    children:[{
-                        name:'财务核算部'
-                    },{
-                        name:'税务管理部'
-                    },{
-                        name:'薪资管理部'
-                    }
-                    ]
-                }//数据属性
+        //         },{
+        //             name:'人事部',
+        //             managerName:'王五',
+        //             children:[{
+        //                 name:'财务核算部'
+        //             },{
+        //                 name:'税务管理部'
+        //             },{
+        //                 name:'薪资管理部'
+        //             }
+        //             ]
+        //         }//数据属性
 
-                ]
-            }
-        ],//组织架构的数据
+        //         ]
+        //     }
+        // ],//组织架构的数据
         defaultProps:{
             children:'children',//读取子节点的字段名
             label:'name'//显示name(要显示的字段的名字) 指定name属性名作为节点标签文本
