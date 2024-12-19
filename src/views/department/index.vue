@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import { getDepartment } from '@/api/department'; //引入封装好的api接口
 export default {
   name: 'Department',
   data(){
@@ -71,6 +72,17 @@ export default {
             children:'children',//读取子节点的字段名
             label:'name'//显示name(要显示的字段的名字) 指定name属性名作为节点标签文本
         }
+    }
+  },
+
+  created(){
+    this.getDepartment()//调用获取数据的方法methods中getDepartment
+  },
+
+  methods:{
+    async getDepartment(){
+        const result = await getDepartment()//调用封装好的api接口方法
+        this.depts = result//把获取的数据传给depts
     }
   }
 }
