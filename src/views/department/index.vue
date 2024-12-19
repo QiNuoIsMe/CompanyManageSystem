@@ -37,6 +37,7 @@
 
 <script>
 import { getDepartment } from '@/api/department'; //引入封装好的api接口
+import { transListToTreeData } from '@/utils';
 export default {
   name: 'Department',
   data(){
@@ -83,7 +84,8 @@ export default {
   methods:{
     async getDepartment(){
         const result = await getDepartment()//调用封装好的api接口方法
-        this.depts = result//把获取的数据传给depts
+        //this.depts = result//把获取的数据传给depts(这里的数据是列表型)
+        this.depts = transListToTreeData(result,0)//调用utils/index.ks中封装的transListToTreeData方法，将列表型数据转化为树形数据
     }
   }
 }
@@ -98,6 +100,6 @@ export default {
 .tree-manager{
     display: inline-block;/*span是行内元素display: inline-block;设置为行内块元素*/
     width: 50px;
-    margin: 10px;
+    margin: 30px;
 }
 </style>
