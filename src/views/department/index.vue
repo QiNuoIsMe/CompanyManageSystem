@@ -3,7 +3,8 @@
     <div class="app-container"><!--设置css样式(内边距及字体大小)-->
         <!-- 展示树形结构 -->
     <!-- default-expand-all默认展开所有节点 -->
-      <el-tree :default-expand-all="true" :data="depts" :props="defaultProps"> <!-- :props="defaultProps"定义了如何从数据项中读取特定信息来生成树节点。defaultProps 是一个对象，它告诉 <el-tree> 如何解析 depts 数组中的每一项-->
+    <!-- expand-on-click-node默认点击展开/收缩所有节点 -->
+      <el-tree :expand-on-click-node="false" :default-expand-all="true" :data="depts" :props="defaultProps"> <!-- :props="defaultProps"定义了如何从数据项中读取特定信息来生成树节点。defaultProps 是一个对象，它告诉 <el-tree> 如何解析 depts 数组中的每一项-->
         <!-- 节点结构 -->
         <!--element ui中树形控件的自定义节点——作用域插槽定义树节点内容 v-slot="{node, data}" 只能作用在template(node为当前节点的node对象，data为当前节点的数据) -->
         <template v-slot="{data}">
@@ -13,16 +14,16 @@
                 <el-col :span="4">
                     <span class="tree-manager">{{data.managerName}}</span><!--传入真实数据。 写死的数据：<span class="tree-manager">管理员</span>-->
                     <!-- 下拉菜单 -->
-                    <el-dropdown>
-                        <!-- 希纳是区域内容 -->
+                    <el-dropdown @command="operateDept">
+                        <!-- 显示区域内容 -->
                         <span class="el-dropdown-link">
                           操作<i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <!-- 下拉菜单选项 -->
                         <el-dropdown-menu slot="dropdown">
-                          <el-dropdown-item>添加子部门</el-dropdown-item>
-                          <el-dropdown-item>编辑部门</el-dropdown-item>
-                          <el-dropdown-item>删除</el-dropdown-item>
+                          <el-dropdown-item command="add">添加子部门</el-dropdown-item>
+                          <el-dropdown-item command="edit">编辑部门</el-dropdown-item>
+                          <el-dropdown-item command="del">删除</el-dropdown-item>
                         </el-dropdown-menu>
                       </el-dropdown>
                       
@@ -32,17 +33,25 @@
 
       </el-tree>
     </div>
+    <!-- 放置弹层 -->
+    <!-- .sync修饰符表示会接受子组件的事件 update:showDialog，会将 该事件的值 传递 给data中的 属性showDialog-->
+    <add-dept :show-dialog.sync="showDialog">
+
+    </add-dept>
   </div>
 </template>
 
 <script>
 import { getDepartment } from '@/api/department'; //引入封装好的api接口
 import { transListToTreeData } from '@/utils';
+import AddDept from './components/add-dept.vue'; //引入新增部门的组件add-dept.vue
 export default {
   name: 'Department',
+  components:{ AddDept },//引入组件，可以作为标签<AddDept />
   data(){
     return{
-        depts:[],//组织架构的数据
+        showDialog: false,//隐藏弹层
+        depts: [],//组织架构的数据
         // depts:[
         //     {
         //         name:'传智教育',
@@ -86,6 +95,13 @@ export default {
         const result = await getDepartment()//调用封装好的api接口方法
         //this.depts = result//把获取的数据传给depts(这里的数据是列表型)
         this.depts = transListToTreeData(result,0)//调用utils/index.ks中封装的transListToTreeData方法，将列表型数据转化为树形数据
+    },
+    //操作部门方法
+    operateDept(type){
+        if(type === 'add'){
+            //添加子部门
+            this.showDialog = true//显示弹层
+        }
     }
   }
 }
