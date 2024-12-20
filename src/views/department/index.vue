@@ -13,8 +13,8 @@
                 <el-col>{{data.name}}</el-col><!--传入真实数据。 写死的数据：<el-col>传智教育</el-col>-->
                 <el-col :span="4">
                     <span class="tree-manager">{{data.managerName}}</span><!--传入真实数据。 写死的数据：<span class="tree-manager">管理员</span>-->
-                    <!-- 下拉菜单 -->
-                    <el-dropdown @command="operateDept">
+                    <!-- 下拉菜单  $event 实参表示类型-->
+                    <el-dropdown @command="operateDept($event,data.id)">
                         <!-- 显示区域内容 -->
                         <span class="el-dropdown-link">
                           操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -35,7 +35,8 @@
     </div>
     <!-- 放置弹层 -->
     <!-- .sync修饰符表示会接受子组件的事件 update:showDialog，会将 该事件的值 传递 给data中的 属性showDialog-->
-    <add-dept :show-dialog.sync="showDialog">
+    <!--  :currentNodeId为prop属性，用于与子组件add-dept.js传值， "currentNodeId"为变量名 -->
+    <add-dept :current-node-id="currentNodeId" :show-dialog.sync="showDialog">
 
     </add-dept>
   </div>
@@ -51,6 +52,7 @@ export default {
   components:{ AddDept },//引入组件，可以作为标签<AddDept />
   data(){
     return{
+      currentNodeId:null,//存储当前点击下拉菜单的节点的id
         showDialog: false,//隐藏弹层
         depts: [],//组织架构的数据
         // depts:[
@@ -98,10 +100,11 @@ export default {
         this.depts = transListToTreeData(result,0)//调用utils/index.ks中封装的transListToTreeData方法，将列表型数据转化为树形数据
     },
     //操作部门方法
-    operateDept(type){
+    operateDept(type,id){
         if(type === 'add'){
             //添加子部门
             this.showDialog = true//显示弹层
+            this.currentNodeId = id //将当前节点id赋值给变量
         }
     }
   }
