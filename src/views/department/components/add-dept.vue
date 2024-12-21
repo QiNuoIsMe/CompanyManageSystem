@@ -12,7 +12,7 @@
                 <el-input v-model="formData.code" placeholder="2-10个字符" size="mini" style="width:80%"></el-input>
             </el-form-item>
             <el-form-item prop="manageId" label="部门负责人">
-                <el-select v-model="formData.manageId"  placeholder="请选择部门负责人" size="mini" style="width:80%" >
+                <el-select v-model="formData.managerId"  placeholder="请选择部门负责人" size="mini" style="width:80%" >
                     <!-- 下拉选项 循环 负责人数据 label表示显示内容的字段(此处显示的内容为负责人名字) value表示实际存储的字段(此处存储的是负责人id)。数据与后端接口返回的数据字段名一致(需查看接口文档)-->
                     <el-option v-for="item in managerList" :key="item.id" :label="item.username" :value="item.id"></el-option>
                 </el-select>
@@ -24,8 +24,8 @@
             <el-form-item>
                 <el-row type="flex" justify="center"><!--水平居中-->
                     <el-col :span="12">
-                        <el-button type="primary" size="mini">确定</el-button>
-                        <el-button size="mini">取消</el-button>
+                        <el-button @click="btnOk" type="primary" size="mini">确定</el-button>
+                        <el-button @click="close" size="mini">取消</el-button>
                     </el-col>
                 </el-row>
             </el-form-item>
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { getDepartment, getManagerList } from '@/api/department'; //引入封装好的api接口中的方法
+import { addDepartment, getDepartment, getDepartmentDetail, getManagerList } from '@/api/department'; //引入封装好的api接口中的方法
 export default{
     // 定义了一个名为 showDialog 的 prop 来接收来自父组件的数据。
     props:{
@@ -118,11 +118,30 @@ export default{
         close(){
             //子组件AddDept(add-dept.vue) 父组件Department(本文件夹下的index.vue)
             //修改父组件的值 子传父——emit发送了一个名为 update:showDialog 的事件，将 false 作为参数传递给该事件
-            this.$emit('update:showDialog',false)//关闭弹层
-
+            this.$refs.addDept.resetFields()//重置表单
+            this.$emit('update:showDialog',false)//关闭弹层            
         },
         async getManagerList(){
             this.managerList = await getManagerList()//给managerList属性赋值，调用api接口中的方法
+        },
+        //点击确认时调用
+        btnOk(){
+            //调用表单实例addDept的整体校验validate
+            this.$refs.addDept.validate(async isOk => {
+                //通过校验
+                if(isOk){
+                    //调用api新增部门方法  延展运算符...将该数据formData拷贝到一个新对象中
+                    //(即拷贝了formData中的五个字段),pid:this.currentNodeId表示为formData中pid赋值
+                    await addDepartment({...this.formData, pid: this.currentNodeId})
+                    //通知父组件更新数据
+                    this.$emit('updateDepartment')//为父组件传了事件，事件名为updateDepartment
+                    this.close()//关闭弹层 重置表单
+                }
+            })
+        },
+
+        async getDepartmentDetail(){
+            this.formData = await getDepartmentDetail(this.currentNodeId)//调用api接口方法从后端获取数据，将数据赋值给当前表单数据
         }
     }
     

@@ -33,12 +33,10 @@
 
       </el-tree>
     </div>
-    <!-- 放置弹层 -->
+    <!-- 放置弹层(组件add-dept.vue) -->
     <!-- .sync修饰符表示会接受子组件的事件 update:showDialog，会将 该事件的值 传递 给data中的 属性showDialog-->
-    <!--  :currentNodeId为prop属性，用于与子组件add-dept.js传值， "currentNodeId"为变量名 -->
-    <add-dept :current-node-id="currentNodeId" :show-dialog.sync="showDialog">
-
-    </add-dept>
+    <!--ref="addDept",获取子组件实例  :currentNodeId为prop属性，用于与子组件add-dept.js传值， "currentNodeId"为变量名 -->
+    <add-dept ref="addDept" @updateDepartment="getDepartment" :current-node-id="currentNodeId" :show-dialog.sync="showDialog"></add-dept>
   </div>
 </template>
 
@@ -94,7 +92,7 @@ export default {
   },
 
   methods:{
-    async getDepartment(){
+    async getDepartment(){//获取部门数据
         const result = await getDepartment()//调用封装好的api接口方法
         //this.depts = result//把获取的数据传给depts(这里的数据是列表型)
         this.depts = transListToTreeData(result,0)//调用utils/index.ks中封装的transListToTreeData方法，将列表型数据转化为树形数据
@@ -105,6 +103,17 @@ export default {
             //添加子部门
             this.showDialog = true//显示弹层
             this.currentNodeId = id //将当前节点id赋值给变量
+        }else if(type === 'edit'){
+           //编辑子部门
+            this.showDialog = true//显示弹层
+            this.currentNodeId = id //将当前节点id赋值给变量，要用id获得数据
+            //父组件调用子组件的方法 来获取数据（①在标签<add-dept>中增加属性ref="addDept",获取子组件实例，）
+            //this.currentNodeId = id 更新了props-是异步动作
+            //this.$refs.addDept.getDepartmentDetail()直接调用子组件的方法-是同步的方法，比异步先进行
+            //即未完成id赋值就执行了获取数据的操作，有问题——使用nextTick方法——等待上一步数据渲染完成，才执行内部的回调函数
+            this.$nextTick(() => {
+              this.$refs.addDept.getDepartmentDetail()//②this.$refs.addDept是弹层组件(子组件add-dept)的实例对象，相当于子组件的this ，调用子组件的方法获取表单数据
+            })
         }
     }
   }
