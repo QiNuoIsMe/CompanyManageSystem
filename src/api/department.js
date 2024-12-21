@@ -37,7 +37,7 @@ export function addDepartment(data) {
  */
 export function getDepartmentDetail(id){
     return request({
-        url:`/company/department/${id}`//反引号``
+        url:`/company/department/${id}`//反引号``创建模板字符串，${}动态内容插入，避免字符串拼接('/company/department/'+id)
     })
 }
  /**
@@ -46,9 +46,19 @@ export function getDepartmentDetail(id){
  */
 export function updateDepartment(data){
     return request({
-        url: `/company/department/${data.id}`,
+        url: `/company/department/${data.id}`,//反引号``
         method:'put',
         data
     })
 
 }
+ /**
+ * 
+ * 删除部门
+ */
+export function delDepartment(id) { 
+    return request({
+        url: `/company/department/${id}`,//反引号``
+        method:'delete'
+    })
+ }

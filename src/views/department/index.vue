@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { getDepartment } from '@/api/department'; //引入封装好的api接口
+import { delDepartment, getDepartment } from '@/api/department'; //引入封装好的api接口
 import { transListToTreeData } from '@/utils';
 import AddDept from './components/add-dept.vue'; //引入新增部门的组件add-dept.vue
 
@@ -114,6 +114,14 @@ export default {
             this.$nextTick(() => {
               this.$refs.addDept.getDepartmentDetail()//②this.$refs.addDept是弹层组件(子组件add-dept)的实例对象，相当于子组件的this ，调用子组件的方法获取表单数据
             })
+        }else{//删除部门
+          //$confirm打开消息提示，返回promise，成功-then；失败-catch
+          this.$confirm('确认删除此部门吗').then(async () => {
+            await delDepartment(id) //导入 并 调用api接口删除数据
+            this.$message.success('删除成功')
+            this.getDepartment()//重新拉取数据
+          })
+
         }
     }
   }

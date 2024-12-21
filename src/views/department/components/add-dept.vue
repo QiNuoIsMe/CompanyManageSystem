@@ -172,7 +172,7 @@ export default {
                     //通知父组件更新数据
                     this.$emit('updateDepartment')//为父组件传了事件，事件名为updateDepartment
                     //提示消息
-                    this.$message.success(`${msg}部门成功`)
+                    this.$message.success(`${msg}部门成功`)//反引号``创建模板字符串，${}动态内容插入，避免字符串拼接(msg+'部门成功')
                     this.close()//关闭弹层 重置表单
                 }
             })
