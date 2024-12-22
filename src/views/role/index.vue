@@ -25,8 +25,13 @@
       </el-table>
       <!-- <el-row>：定义一行。它可以包含多个 <el-col> 子元素 -->
       <el-row type="flex" style="height:60px" align="middle" justify="end">
-        <!-- 放置分页组件  -->
-        <el-pagination layout="prev,pager,next"></el-pagination>
+        <!-- 放置分页组件  属性名见el-ui官网分页查询的attribution-->
+        <el-pagination 
+        @current-change="changePage"
+        :page-size="pageParams.pagesize"
+        :current-page="pageParams.page"
+        :total="pageParams.total"
+        layout="prev,pager,next"></el-pagination>
       </el-row>
     </div>
   </div>
@@ -39,6 +44,12 @@ export default {
   data(){
     return{
       list:[],//存放角色列表
+      //将分页信息放置到一个对象中
+      pageParams:{
+        page:1,//第几页，属性名需要与传入后端的字段名保持一致
+        pagesize:5,//每页多少条
+        total:0//数据总条数
+      }
     }
 
   },
@@ -48,8 +59,15 @@ export default {
 
   methods:{
     async getRoleList(){//不传参数，后端默认首页为1，每页10条
-      const { rows } = await getRoleList()//获取数据(rows角色数据,total用于分页查询)（需查看后端返回的数据，
+      const { rows, total } = await getRoleList(this.pageParams)//获取数据(rows角色数据,total用于分页查询)（需查看后端返回的数据，
       this.list = rows
+      this.pageParams.total = total
+    },
+
+    //切换分页时，请求新的数据
+    changePage(newPage){
+      this.pageParams.page = newPage //赋值当前页码
+      this.getRoleList()
     }
   }
 }
