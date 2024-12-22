@@ -36,23 +36,28 @@
       </el-row>
     </div>
     <!-- 放置弹层，此处就不用子组件了 -->
-    <el-dialog width="500px" title="添加角色" :visible.sync="showDialog">
+    <!-- @close="btnCancel"- 点击叉号关闭弹层时，sync修饰符的事件只关闭弹层，未重置表单，这里需要用@close监听事件重置表单 -->
+    <el-dialog @close="btnCancel" width="500px" title="添加角色" :visible.sync="showDialog">
       <!-- 放置表单内容 -->
-      <el-form>
-        <el-form-item label="角色名称" label-width="120px">
-          <el-input style="width: 300px" size="mini"></el-input>
+      <el-form ref="roleForm" :model="roleForm" :rules="rules" label-width="120px">
+        <el-form-item prop="name" label="角色名称" >
+          <el-input v-model="roleForm.name" style="width: 300px" size="mini"></el-input>
         </el-form-item>
-        <el-form-item label="启用" label-width="120px">
-          <el-switch size="mini"></el-switch>
+        <el-form-item prop="state" label="启用">
+          <!-- 重置表单数据 需要prop属性 -->
+          <!-- 如果不需要校验 就不需要写 prop属性；但是需要v-model来双向绑定数据 -->
+          <!-- switch默认为boolean值，此处需要设置:active-value="1"打开是1，:inactive-value="0"关闭是0。
+             有:是防止把1变为字符串 :是 v-bind 的简写，用于动态绑定 HTML 属性到 Vue 实例的数据或表达式。传递非字符串类型的值 -->
+          <el-switch :active-value="1" :inactive-value="0" v-model="roleForm.state" size="mini"></el-switch>
         </el-form-item>
-        <el-form-item label="角色描述" label-width="120px">
-          <el-input type="textarea" :rows="3" style="width: 300px" size="mini"></el-input>
+        <el-form-item prop="description" label="角色描述">
+          <el-input v-model="roleForm.description" type="textarea" :rows="3" style="width: 300px" size="mini"></el-input>
         </el-form-item>
         <el-form-item>
           <el-row type="flex" justify="center">
-            <el-col :span="7">
-              <el-button type="primary" size="mini">确定</el-button>
-              <el-button size="mini">取消</el-button>
+            <el-col :span="12">
+              <el-button @click="btnOK" type="primary" size="mini">确定</el-button>
+              <el-button @click="btnCancel" size="mini">取消</el-button>
             </el-col>
           </el-row>
         </el-form-item>
@@ -61,7 +66,7 @@
   </div>
 </template>
 <script>
-import { getRoleList } from '@/api/role';
+import { addRole, getRoleList } from '@/api/role';
 export default {
   name: 'Role',
   
@@ -70,12 +75,27 @@ export default {
       showDialog: false,
       list:[],//存放角色列表
       //将分页信息放置到一个对象中
+
       pageParams:{
         page:1,//第几页，属性名需要与传入后端的字段名保持一致
         pagesize:5,//每页多少条
         total:0//数据总条数
+      },
+
+      //添加角色的表单结构
+      roleForm:{
+        name:'',
+        description:'',
+        state:0//默认未启用 关闭0 打开1 
+      },
+
+      //校验规则
+      rules:{
+        name:[{ required:true, message:'角色名称不能为空', trigger:'blur'}],
+        description:[{ required:true, message:'角色描述不能为空', trigger:'blur'}],
       }
     }
+
 
   },
   created(){
@@ -93,6 +113,24 @@ export default {
     changePage(newPage){
       this.pageParams.page = newPage //赋值当前页码
       this.getRoleList()
+    },
+
+    //确定按钮
+    btnOK(){
+      this.$refs.roleForm.validate(async isOK => {
+        if(isOK){
+          await addRole(this.roleForm)//调用api接口方法新增角色数据
+          this.$message.success('新增角色成功')//提示消息
+          this.getRoleList()//更新数据
+          this.btnCancel()//关闭弹层
+
+
+        }
+      })
+    },
+    btnCancel(){
+      this.$refs.roleForm.resetFields()//重置表单
+      this.showDialog = false //关闭弹层
     }
   }
 }
