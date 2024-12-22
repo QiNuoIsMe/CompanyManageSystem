@@ -3,7 +3,8 @@
     <div class="app-container">
       <!-- 角色管理内容 -->
       <div class="role-operate"><!--添加角色按钮-->
-        <el-button size="mini" type="primary">添加角色</el-button>
+        <!-- @click="showDialog = true"此处只有一行代码就不再写个方法了 -->
+        <el-button @click="showDialog = true" size="mini" type="primary">添加角色</el-button>
       </div>
       <!-- 放置table组件 -->
       <el-table :data="list">
@@ -34,6 +35,29 @@
         layout="prev,pager,next"></el-pagination>
       </el-row>
     </div>
+    <!-- 放置弹层，此处就不用子组件了 -->
+    <el-dialog width="500px" title="添加角色" :visible.sync="showDialog">
+      <!-- 放置表单内容 -->
+      <el-form>
+        <el-form-item label="角色名称" label-width="120px">
+          <el-input style="width: 300px" size="mini"></el-input>
+        </el-form-item>
+        <el-form-item label="启用" label-width="120px">
+          <el-switch size="mini"></el-switch>
+        </el-form-item>
+        <el-form-item label="角色描述" label-width="120px">
+          <el-input type="textarea" :rows="3" style="width: 300px" size="mini"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-row type="flex" justify="center">
+            <el-col :span="7">
+              <el-button type="primary" size="mini">确定</el-button>
+              <el-button size="mini">取消</el-button>
+            </el-col>
+          </el-row>
+        </el-form-item>
+      </el-form>      
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -43,6 +67,7 @@ export default {
   
   data(){
     return{
+      showDialog: false,
       list:[],//存放角色列表
       //将分页信息放置到一个对象中
       pageParams:{
