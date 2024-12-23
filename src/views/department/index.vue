@@ -6,6 +6,7 @@
     <!-- expand-on-click-node默认点击展开/收缩所有节点 -->
       <el-tree :expand-on-click-node="false" :default-expand-all="true" :data="depts" :props="defaultProps"> <!-- :props="defaultProps"定义了如何从数据项中读取特定信息来生成树节点。defaultProps 是一个对象，它告诉 <el-tree> 如何解析 depts 数组中的每一项-->
         <!-- 节点结构 -->
+        <!-- 插槽在vue中是一种很常见的写法，让父组件可以向子组件指定位置插入html结构，也是一种组件间通信的方式。一共有三种分类:默认插槽、具名插槽、作用域插槽， -->
         <!--element ui中树形控件的自定义节点——作用域插槽定义树节点内容 v-slot="{node, data}" 只能作用在template(node为当前节点的node对象，data为当前节点的数据) -->
         <template v-slot="{data}">
             <el-row style="width:100%;height:40px" type="flex" justify="span-between" align="middle">
