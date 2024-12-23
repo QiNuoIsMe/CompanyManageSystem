@@ -10,7 +10,7 @@
       <el-table :data="list">
         <el-table-column prop="name" align="center" width="200px" label="角色">
           <template v-slot="{ row }">
-            <el-input v-if="row.isEdit" size="mini"></el-input><!--row.isEdit为true 处于编辑状态-->
+            <el-input v-model="row.editRow.name" v-if="row.isEdit" size="mini"></el-input><!--row.isEdit为true 处于编辑状态-->
             <span v-else>{{ row.name }}</span><!--不处于编辑状态-->
           </template>
         </el-table-column>
@@ -18,14 +18,14 @@
           <!-- element-ui官网的table中的 自定义列结构，使用作用域插槽，获取row，column等数据-->
           <template v-slot="{ row }"><!--须在template标签内-->
             <!--编辑状态-->
-            <el-switch v-if="row.isEdit"></el-switch>
+            <el-switch v-model="row.editRow.state" v-if="row.isEdit" :active-value="1" :inactive-value="0"></el-switch>
             <!--非编辑状态-->
             <span v-else> {{ row.state === 1 ? "已启用" : row.state === 0 ? "未启用" : "无" }} </span> <!--使用两次三目运算符-->
           </template>
         </el-table-column>
         <el-table-column prop="description" align="center" label="描述">
           <template v-slot="{ row }">
-            <el-input v-if="row.isEdit" type="textarea"></el-input>
+            <el-input v-model="row.editRow.description" v-if="row.isEdit" type="textarea" size="mini"></el-input>
             <span v-else>{{ row.description }}</span>
           </template>
         </el-table-column>
@@ -39,7 +39,7 @@
 
             <template v-else>
               <el-button size="mini" type="text">分配权限</el-button><!--type="text"将按钮变为链接类型-->
-              <el-button @click="btnEdit(row)" size="mini" type="text">编辑</el-button>
+              <el-button @click="btnEditRow(row)" size="mini" type="text">编辑</el-button>
               <el-button size="mini" type="text">删除</el-button>
             </template>
           </template>
@@ -135,6 +135,11 @@ export default {
         //添加的动态属性 不具备响应式的特点
         //this.$set(目标对象,属性名称,初始值) 可以针对目标对象 添加的属性 添加响应式
         this.$set(item,'isEdit',false)
+        this.$set(item,'editRow',{//初始化时定义 缓存数据,并赋初始值(用于数据隔离，防止修改数据又取消时真实数据变化)
+          name: item.name,
+          state: item.state,
+          description: item.description
+        })
       })
     },
 
@@ -163,7 +168,10 @@ export default {
     },
     
     //点击编辑行
-    btnEdit(row){
+    btnEditRow(row){
+      row.editRow.name = row.name//更新缓存数据
+      row.editRow.state = row.state
+      row.editRow.description = row.description
       row.isEdit = true //改变行的编辑状态
     }
   }
