@@ -10,7 +10,7 @@
       <el-table :data="list">
         <el-table-column prop="name" align="center" width="200px" label="角色">
           <template v-slot="{ row }">
-            <el-input v-model="row.editRow.name" v-if="row.isEdit" size="mini"></el-input><!--row.isEdit为true 处于编辑状态-->
+            <el-input v-if="row.isEdit" v-model="row.editRow.name" size="mini"></el-input><!--row.isEdit为true 处于编辑状态-->
             <span v-else>{{ row.name }}</span><!--不处于编辑状态-->
           </template>
         </el-table-column>
@@ -18,14 +18,14 @@
           <!-- element-ui官网的table中的 自定义列结构，使用作用域插槽，获取row，column等数据-->
           <template v-slot="{ row }"><!--须在template标签内-->
             <!--编辑状态-->
-            <el-switch v-model="row.editRow.state" v-if="row.isEdit" :active-value="1" :inactive-value="0"></el-switch>
+            <el-switch  v-if="row.isEdit"  v-model="row.editRow.state" :active-value="1" :inactive-value="0"></el-switch>
             <!--非编辑状态-->
             <span v-else> {{ row.state === 1 ? "已启用" : row.state === 0 ? "未启用" : "无" }} </span> <!--使用两次三目运算符-->
           </template>
         </el-table-column>
         <el-table-column prop="description" align="center" label="描述">
           <template v-slot="{ row }">
-            <el-input v-model="row.editRow.description" v-if="row.isEdit" type="textarea" size="mini"></el-input>
+            <el-input v-if="row.isEdit" v-model="row.editRow.description" type="textarea" size="mini"></el-input>
             <span v-else>{{ row.description }}</span>
           </template>
         </el-table-column>
@@ -33,14 +33,22 @@
         <el-table-column align="center" label="操作">
           <template v-slot="{ row }"><!--v-slot="{ row }"获取当前行数据-->
             <template v-if="row.isEdit">
-              <el-button type="primary" size="mini">确定</el-button>
-              <el-button size="mini">取消</el-button>
+              <el-button @click="btnEditOK(row)" type="primary" size="mini">确定</el-button>
+              <el-button @click="row.isEdit=fasle" size="mini">取消</el-button><!--此处不需要再重置数据了，因为再次点击编辑时，编辑事件会更新缓存数据-->
             </template>
 
             <template v-else>
               <el-button size="mini" type="text">分配权限</el-button><!--type="text"将按钮变为链接类型-->
               <el-button @click="btnEditRow(row)" size="mini" type="text">编辑</el-button>
-              <el-button size="mini" type="text">删除</el-button>
+              <!-- 使用element-ui中的气泡确认框el-popconfirm 包裹 删除按钮 -->
+              <el-popconfirm
+                title="确定删除这条数据吗？"
+                @onConfirm="confirmDel(row.id)"
+              >
+              <!--① @onConfirm="confirmDel(row.id)"监听事件，调用方法confirmDel，传入id  ②具名插槽 slot="reference" -->
+                <el-button slot="reference" style="margin-left: 10px;" size="mini" type="text">删除</el-button>
+
+              </el-popconfirm>
             </template>
           </template>
         </el-table-column>
@@ -87,7 +95,7 @@
   </div>
 </template>
 <script>
-import { addRole, getRoleList } from '@/api/role';
+import { addRole, delRole, getRoleList, updateRole } from '@/api/role';
 export default {
   name: 'Role',
   
@@ -125,8 +133,8 @@ export default {
 
   methods:{
     async getRoleList(){//不传参数，后端默认首页为1，每页10条
-      const { rows, total } = await getRoleList(this.pageParams)//获取数据(rows角色数据,total用于分页查询)（需查看后端返回的数据，
-      this.list = rows
+      const { rows, total } = await getRoleList(this.pageParams)//获取数据(rows数组角色列表数据,total用于分页查询)（需查看后端返回的数据，
+      this.list = rows//rows每个元素包含四个字段id name descrip state
       this.pageParams.total = total
       //针对每一行数据添加一个编辑标记
       this.list.forEach(item => {
@@ -139,7 +147,7 @@ export default {
           name: item.name,
           state: item.state,
           description: item.description
-        })
+        })//------------------每一行数据包含属性description、editRow{isEdit、name、state}、id、isEdit、name、state
       })
     },
 
@@ -173,6 +181,40 @@ export default {
       row.editRow.state = row.state
       row.editRow.description = row.description
       row.isEdit = true //改变行的编辑状态
+    },
+
+    //行内编辑 点击确定时触发
+    async btnEditOK(row){
+      //检查必填项（校验）
+      if(row.editRow.name && row.editRow.description){//缓存数据name description非空，通过校验
+        //调用api接口使用缓存数据 更新数据。接口需要的参数包含四个字段id name descrip state，row.editRow只有三个name descrip state
+        //需要使用...延展运算符 将row.editRow对象拷贝一份，再在后面加上id属性，并赋值
+        await updateRole({...row.editRow, id:row.id})//只在后端改变了
+        //提示消息
+        this.$message.success('更新角色成功')
+        //更新回显数据
+        // row.name =row.editRow.name//eslint的一校验 误判
+        //采用Object.assign(target, source),对象提供的给目标对象赋值的方法，将来源数据source赋值给目标对象target
+        Object.assign(row,{
+          ...row.editRow,//将row.editRow对象拷贝一份
+        //退出编辑模式
+          isEdit: false
+          
+        })
+        console.log("row:"+row)
+      }//规避eslint的误判（认为await后不能对row赋值）
+      else{
+        this.$message.warning("角色和描述不能为空")
+      }
+    },
+    //行内编辑，点击删除的 气泡确认框中的 确定 后触发的 
+    async confirmDel(id){
+      await delRole(id)//调用api删除角色接口,只删除了后端，前端显示的数据需要更新
+      //若当前数据为当前页的最后一条(list数组中只有一个元素)，显示前一页数据(当前页码page-1)-------
+      if(this.list.length === 1) this.pageParams.page--
+      this.getRoleList()//重新加载数据
+
+      
     }
   }
 }
