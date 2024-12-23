@@ -2,7 +2,7 @@
   <div class="container">
     <div class="app-container"><!--设置css样式(内边距及字体大小)-->
         <!-- 展示树形结构 -->
-    <!-- default-expand-all默认展开所有节点 -->
+    <!-- :default-expand-all="true"可以写为default-expand-all默认展开所有节点 -->
     <!-- expand-on-click-node默认点击展开/收缩所有节点 -->
       <el-tree :expand-on-click-node="false" :default-expand-all="true" :data="depts" :props="defaultProps"> <!-- :props="defaultProps"定义了如何从数据项中读取特定信息来生成树节点。defaultProps 是一个对象，它告诉 <el-tree> 如何解析 depts 数组中的每一项-->
         <!-- 节点结构 -->
