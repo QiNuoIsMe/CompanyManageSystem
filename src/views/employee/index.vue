@@ -31,7 +31,6 @@
 
 <script>
 import { getDepartment } from '@/api/department'
-import { transListToTreeData } from '@/utils'
 export default {
   name: 'Employee',
   data(){
@@ -40,8 +39,11 @@ export default {
       defaultProps:{
         label:'name',
         children:'children'
+      },
+      //存储查询参数（后端中获取员工列表有4个查询参数）
+      queryParams:{
+        departmentId:null//部门id
       }
-
     }
   },
 
@@ -51,8 +53,8 @@ export default {
   methods:{
     async getDepartment(){
       //递归方法 将列表转化为树形
-      let result = await getDepartment()//api接口获取部门列表数据
-      this.depts = transListToTreeData(result, 0)// utils工具中 将列表转化为树形的方法
+      let result = await getDepartment()//api接口获取部门列表数据初始父节点id为0
+      this.depts = transListToTreeData(result,0)//调用utils/index.ks中封装的transListToTreeData方法，将列表型数据转化为树形数据
     }
   }
 }
