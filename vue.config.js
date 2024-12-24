@@ -27,7 +27,7 @@ module.exports = {
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
-    // 关闭语法检查
+    // 关闭语法检查---------
   lintOnSave: false,
   // lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
