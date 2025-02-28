@@ -210,6 +210,7 @@ export default {
     //行内编辑，点击删除的 气泡确认框中的 确定 后触发的 
     async confirmDel(id){
       await delRole(id)//调用api删除角色接口,只删除了后端，前端显示的数据需要更新
+      this.$message.success('删除角色成功')
       //若当前数据为当前页的最后一条(list数组中只有一个元素)，显示前一页数据(当前页码page-1)-------
       if(this.list.length === 1) this.pageParams.page--
       this.getRoleList()//重新加载数据

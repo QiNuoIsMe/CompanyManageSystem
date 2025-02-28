@@ -6,7 +6,9 @@
       <el-card shadow="never" class="login-card">
         <!--登录表单-->
         <!-- el-form > el-form-item > el-input -->
+        <!-- ref绑定子组件实例form，:model双向绑定Vue组件的数据，:rules定义表单的校验规则 -->
         <el-form ref="form" :model="loginForm" :rules="loginRules">
+          <!-- prop="mobile"：将表单项与 loginRules.mobile 的验证规则关联起来。 -->
           <el-form-item prop="mobile">
             <el-input v-model="loginForm.mobile" placeholder="请输入手机号" />
           </el-form-item>
@@ -40,9 +42,9 @@ export default {
       },
       loginRules: {
         mobile: [{
-          required: true,
+          required: true, //必填
           message: '请输入手机号',
-          trigger: 'blur'
+          trigger: 'blur' //当输入框失去焦点（blur 事件）时，触发验证。
         }, {
           pattern: /^1[3-9]\d{9}$/,
           message: '手机号格式不正确',
@@ -62,13 +64,19 @@ export default {
         }],
         // required只能检测 null undefined ""
         isAgree: [{
+          //定义的表单验证规则--validator函数
+            // rule：当前的验证规则（在这里未使用）。
+            //value：当前字段的值（即 isAgree 的值）。
+            //callback：回调函数，用于通知验证结果。
           validator: (rule, value, callback) => {
-            // rule校验规则
-            // value 校验的值
-            // callback 函数 - promise resolve reject
-            // callback() callback(new Error(错误信息))
             value ? callback() : callback(new Error('您必须勾选用户的使用协议'))
           }
+            /*如果 value 为 true（表示用户勾选了协议），调用 callback()，表示验证通过。
+            如果 value 为 false（表示用户未勾选协议），调用 callback(new Error('您必须勾选用户的使用协议'))，
+            表示验证失败，并返回错误信息。
+            */
+            // callback 函数 - promise resolve reject
+            // callback() callback(new Error(错误信息))
         }]
       }
     }
@@ -78,6 +86,10 @@ export default {
   // },
   methods: {
     login() {
+      /* user/login action 返回了一个 Promise，使用 await 关键字等待 Vuex store 中名为 user/login 的 action 完成，并根据结果执行相应逻辑。
+      Action内部的状态管理:
+      在 user/login action 内部，如果登录成功，可能会提交（commit）一个 mutation 来更新 Vuex store 中的状态
+      （如 state.isAuthenticated = true），然后你可以在组件中监听这些状态的变化。*/
       this.$refs.form.validate(async(isOK) => {
         if (isOK) {
           // alert('校验通过')

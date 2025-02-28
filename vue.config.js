@@ -73,20 +73,21 @@ module.exports = {
     // when there are many pages, it will cause too many meaningless requests
     config.plugins.delete('prefetch')
 
-    // set svg-sprite-loader
+    // set svg-sprite-loader(svg精灵图)
     config.module
       .rule('svg')
-      .exclude.add(resolve('src/icons'))
+      .exclude.add(resolve('src/icons'))//-----解析目录src/icons
       .end()
     config.module
       .rule('icons')
       .test(/\.svg$/)
       .include.add(resolve('src/icons'))
       .end()
-      .use('svg-sprite-loader')
+      .use('svg-sprite-loader')//使用该loader
       .loader('svg-sprite-loader')
       .options({
-        symbolId: 'icon-[name]'
+        symbolId: 'icon-[name]'//有icon-前缀，需要在引入加上该icon-前缀
+                              //(在/src/component/SvgIcon/index.vue中)
       })
       .end()
 
