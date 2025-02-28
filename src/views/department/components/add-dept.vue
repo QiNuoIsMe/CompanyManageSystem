@@ -79,7 +79,8 @@ export default {
                             //使用数组的·filter方法，保留不等于自身id的数据，重新赋给result
                             result = result.filter(item => item.id !== this.formData.id)
                         }
-
+                        /*.some()：这是 JavaScript 数组的一个方法，用于测试数组中的至少一个元素是否满足提供的函数实现的条件。
+                        如果找到第一个满足条件的元素，它将立即返回 true，并且不会继续检查数组中的剩余元素。如果没有找到任何满足条件的元素，则最终返回 false。*/
                         //result数组中是否存在value值.item 就是指当前正在被检查的那个部门对象。(item是每一个部门对象)
                         // 遍历 result 数组中的每一个元素（即每个部门对象），并检查其 code 属性是否与用户输入的新部门编码 (value) 相等。
                         if (result.some(item => item.code === value)) {//item.code需要查看 后端接口文档 获取部门列表 中返回的data数据字段名
@@ -131,7 +132,7 @@ export default {
 
     },
     created() {
-        this.getManagerList()//初始化时获取负责人数据
+        this.getManagerList()//初始化时调用获取部门负责人数据的方法，
     },
     methods: {
         close() {

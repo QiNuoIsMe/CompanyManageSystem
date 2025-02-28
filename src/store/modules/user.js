@@ -1,12 +1,12 @@
 import { getUserInfo, login } from '@/api/user'
 import { getToken, removeToken, setToken } from '@/utils/auth'
-const state={
+const state={ //------管理应用的状态state------
   token:getToken(),//从缓存中读取初始值
   // token:null
   userInfo:{}//存储用户资料的状态
 }
 
-const mutations={
+const mutations={ //-----修改状态的方法mutations------
   setToken(state,token){
     state.token=token
     //同步到缓存(调用@/utils/auth.js中的setToken)
@@ -18,13 +18,13 @@ const mutations={
     removeToken
   },
   setUserInfo(state,userInfo){
-    state.userInfo = userInfo//通过mutation设置用户信息状态state
+    state.userInfo = userInfo//将用户信息存储到state中//通过mutation设置用户信息状态state
   }
 }
 
-const actions={
+const actions={// -----异步操作actions-------
   //context上下文，传入参数
-  async login(context,data){
+  async login(context,data){ //context是一个对象，包含了state,commit,dispatch等方法
     console.log(data)
     //
     //async await,只有返回的promise成功执行才会执行await下方代码；若执行失败axios(utils中request)已进行处理封装

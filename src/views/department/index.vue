@@ -8,19 +8,23 @@
         <!-- 节点结构 -->
         <!-- 插槽在vue中是一种很常见的写法，让父组件可以向子组件指定位置插入html结构，也是一种组件间通信的方式。一共有三种分类:默认插槽、具名插槽、作用域插槽， -->
         <!--element ui中树形控件的自定义节点——作用域插槽定义树节点内容 v-slot="{node, data}" 只能作用在template(node为当前节点的node对象，data为当前节点的数据) -->
+        <!-- v-slot="{data}作用域插槽的语法，表示从子组件（<el-tree>）中获取数据，并将其解构为 data。 -->
         <template v-slot="{data}">
             <el-row style="width:100%;height:40px" type="flex" justify="span-between" align="middle">
                 <!--type="flex"可以设置justify，align。 flex布局下水平排列justify="span-between"两头对齐。flex布局下垂直排列align="middle"垂直居中-->
                 <el-col>{{data.name}}</el-col><!--传入真实数据。 写死的数据：<el-col>传智教育</el-col>-->
                 <el-col :span="4">
                     <span class="tree-manager">{{data.managerName}}</span><!--传入真实数据。 写死的数据：<span class="tree-manager">管理员</span>-->
-                    <!-- 下拉菜单  $event 实参表示类型-->
+                    <!-- 下拉菜单  $event 实参表示类型。@command 是 <el-dropdown> 组件的事件监听器，用于监听下拉菜单项的点击事件
+                      当用户点击某个菜单项时，operateDept 方法会被调用，并传递两个参数：
+                      $event：菜单项的 command 值（如 add、edit、del）。data.id：当前节点的 ID。-->
                     <el-dropdown @command="operateDept($event,data.id)">
                         <!-- 显示区域内容 -->
                         <span class="el-dropdown-link">
                           操作<i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <!-- 下拉菜单选项 -->
+                        <!-- <el-dropdown-menu> 是下拉菜单的内容容器，通过 slot="dropdown" 将其插入到 <el-dropdown> 的下拉区域。 -->
                         <el-dropdown-menu slot="dropdown">
                           <el-dropdown-item command="add">添加子部门</el-dropdown-item>
                           <el-dropdown-item command="edit">编辑部门</el-dropdown-item>
@@ -35,6 +39,8 @@
       </el-tree>
     </div>
     <!-- 放置弹层(组件add-dept.vue) -->
+    <!-- updateDepartment：这是子组件触发的事件名称。
+    ="getDepartment"：这是父组件中定义的方法，当子组件触发 updateDepartment 事件时，getDepartment 方法会被调用。 -->
     <!-- .sync修饰符表示会接受子组件的事件 update:showDialog，会将 该事件的值 传递 给data中的 属性showDialog-->
     <!--ref="addDept",获取子组件实例  :currentNodeId为prop属性，用于与子组件add-dept.js传值， "currentNodeId"为变量名 -->
     <add-dept ref="addDept" @updateDepartment="getDepartment" :current-node-id="currentNodeId" :show-dialog.sync="showDialog"></add-dept>

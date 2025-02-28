@@ -10,7 +10,7 @@ const service = axios.create({
 
 // 请求拦截器
 // 两个参数，成功调用第一个回调函数，失败调用第二个
-service.interceptors.request.use((config)=>{
+service.interceptors.request.use((config)=>{//config 是请求的配置对象（包括 URL、请求头、请求方法等
   // 注入token
   // this.$store.getters但是这里不是组件，是actions。所以使用导出的store
   // store.getter.token => 将toekn放入请求头里面
@@ -24,7 +24,7 @@ service.interceptors.request.use((config)=>{
 })
 
 // 响应拦截器
-service.interceptors.response.use((response)=>{
+service.interceptors.response.use((response)=>{//response 是服务器返回的响应对象
   // axios默认包裹了data,解构数据
   const {data,message,success} = response.data
   if(success){

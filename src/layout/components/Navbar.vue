@@ -10,11 +10,13 @@
           <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
           <img v-if="avatar" :src="avatar" class="user-avatar"><!--用户头像非空，显示头像-->
           <span v-else class="username">{{name?.charAt(0)}}</span><!--用户头像为空，使用用户名的第一个字作为头像。此处使用可选链操作符?-->
+          <!-- 当？前面的变量为空时，它不会继续往下执行，防止报错，如null?.name 。$ npm i vue@2.7.0  vue-template-compiler@2.7.0   # 需要升级vue版本️-->
           <!-- 用户名称 （文本插值）-->
           <span class="name">{{name}}</span>
           <!-- 图标 -->
           <i class="el-icon-setting" />
         </div>
+        <!-- <el-dropdown-menu>：下拉菜单的内容区域。slot="dropdown"：将内容插入到 el-dropdown 的 dropdown 插槽中。 -->
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
             <el-dropdown-item>
@@ -28,7 +30,8 @@
           <a target="_blank" @click.prevent="updatePassword">
             <el-dropdown-item>修改密码</el-dropdown-item>
           </a>
-          <!-- native时间修饰符 -->
+          <!-- native时间修饰符，监听 <el-dropdown-item> 组件根元素的原生 click 事件。告诉 Vue：不要把这个事件当作自定义事件，而是当作原生事件，直接绑定到组件的根元素上。
+            divided：添加分隔线。display:block;布局方式渲染为块级元素 -->
           <!-- 用于注册html5组件的根元素的原生事件 -->
           <el-dropdown-item divided @click.native="logout">
             <span style="display:block;">退出</span>
@@ -42,7 +45,7 @@
       <!-- 修改密码表单 -->
       <el-form ref="passForm" label-width="120px" :model="passForm" :rules="rules"> 
         <!-- ref绑定表单实例，命名为passForm。:model双向绑定表单数据(在data中)。:rules双向绑定校验规则(在data中) -->
-        <el-form-item label="旧密码" prop="oldPassword"><!--prop绑定字段oldPassword-->
+        <el-form-item label="旧密码" prop="oldPassword"><!--prop绑定字段oldPassword，与rules校验规则对应字段绑定-->
           <el-input v-model="passForm.oldPassword" show-password size="small"><!--v-model双向绑定表单数据passForm中的oldPassword-->
           </el-input>
         </el-form-item>
@@ -121,7 +124,7 @@ export default {
     btnOk(){
       this.$refs.passForm.validate( async isOk =>{
         if(isOk){
-          await updatePassword(this.passForm)
+          await updatePassword(this.passForm)//调用api/user.js中的updatePassword方法
           //成功了
           this.btnCanel()
           this.$message.success('修改密码成功')
@@ -129,7 +132,7 @@ export default {
       })
     },
     btnCanel(){
-      this.$refs.passForm.resetFields()//form表单中的方法--重置表单
+      this.$refs.passForm.resetFields()//$refs: 访问已注册的子组件或元素。//form表单中的方法--重置表单
       this.showDialog = false//关闭弹窗
     },
     async logout() {
