@@ -40,14 +40,13 @@
             <template v-else>
               <el-button size="mini" type="text">分配权限</el-button><!--type="text"将按钮变为链接类型-->
               <el-button @click="btnEditRow(row)" size="mini" type="text">编辑</el-button>
-              <!-- 使用element-ui中的气泡确认框el-popconfirm 包裹 删除按钮 -->
+              <!-- 使用element-ui中的气泡确认框el-popconfirm 包裹 删除按钮。在element文档中查看(复制) -->
               <el-popconfirm
                 title="确定删除这条数据吗？"
                 @onConfirm="confirmDel(row.id)"
               >
               <!--① @onConfirm="confirmDel(row.id)"监听事件，调用方法confirmDel，传入id  ②具名插槽 slot="reference" -->
                 <el-button slot="reference" style="margin-left: 10px;" size="mini" type="text">删除</el-button>
-
               </el-popconfirm>
             </template>
           </template>

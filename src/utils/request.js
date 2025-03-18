@@ -26,7 +26,9 @@ service.interceptors.request.use((config)=>{//config 是请求的配置对象（
 // 响应拦截器
 service.interceptors.response.use((response)=>{//response 是服务器返回的响应对象
   // axios默认包裹了data,解构数据
-  const {data,message,success} = response.data
+  //判断是不是Blob
+  if(response.data instanceof Blob){ return response.data }// 返回了Blob对象
+  const {data,message,success} = response.data//默认json格式
   if(success){
     return data
   }else{
