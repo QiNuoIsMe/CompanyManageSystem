@@ -131,7 +131,9 @@ export function transListToTreeData(list,rootValue){//list列表数据，rootVal
       //当前节点的id 和 当前节点的子节点的pid是相等的
       //递归寻找被push进来的item的 子节点
       const children = transListToTreeData(list,item.id)//寻找当前节点的子节点
-      item.children = children //将子节点赋值给当前节点的children
+      if(children.length){//只有当前节点有子节点(长度大于0)时才添加children属性，否则会(一直有子节点)造成级联组件本身就已经是最末端了，但是发现它的children属性存在，就会呈现不同的表现形式。
+        item.children = children //将子节点赋值给当前节点的children
+      }
     }
   })
     //未找到匹配的子节点item，直接return

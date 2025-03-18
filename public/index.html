@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= webpackConfig.name %></title>
+    <!-- 采用外链引入排除的文件 -->
+      <!-- 这个标签用于引入Element UI库的CSS样式文件。Element UI是一个基于Vue.js的UI组件库，这个CSS文件包含了Element UI组件的默认样式。
+         它被放在<head>标签内，因为CSS文件通常需要在页面渲染之前加载，以确保页面加载时样式已经应用。 -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.13/theme-chalk/index.min.css" rel="stylesheet">
   </head>
   <body>
     <noscript>
@@ -13,5 +17,17 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+    <!-- 采用外链引入排除的文件 -->
+      <!-- vue.min.js: Vue.js的核心库，用于构建用户界面。
+        index.min.js: Element UI的JavaScript文件，包含了Element UI的组件逻辑。
+        cos-js-sdk-v5.min.js: 腾讯云对象存储（COS）的JavaScript SDK，用于与腾讯云的对象存储服务进行交互。
+        
+        位置: 这些<script>标签被放在<body>标签的底部，即在<div id="app"></div>之后。这是因为：
+        性能优化: 将JavaScript文件放在页面底部可以确保HTML和CSS先加载和渲染，提升页面的加载速度。
+        依赖关系: Vue.js和Element UI需要在DOM元素加载完成后才能正确运行。放在底部可以确保DOM已经加载完毕。 -->
+    <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/vue/2.6.14/vue.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.13/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cos-js-sdk-v5/dist/cos-js-sdk-v5.min.js" ></script>
+
   </body>
 </html>

@@ -13,6 +13,7 @@ import permissionRouter from './modules/permission'
 import roleRouter from './modules/role'
 import salaryRouter from './modules/salary'
 import socialRouter from './modules/social'
+
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -61,22 +62,24 @@ export const constantRoutes = [
       meta: { title: '首页', icon: 'dashboard' }
     }]
   },
-  departmentRouter,//引入路由department.js 组织架构
-  roleRouter,//角色管理
-  employeeRouter,//员工管理
-  permissionRouter,//权限管理
-  salaryRouter,//工资管理
-  socialRouter,//社保管理
-  attendanceRouter,//考勤管理
-  approvalRouter,//审批管理
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
-
+// 动态路由
+export const asyncRoutes = [
+  departmentRouter,
+  roleRouter,
+  employeeRouter,
+  permissionRouter,
+  attendanceRouter,
+  approvalRouter,
+  salaryRouter,
+  socialRouter]
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'history', //改hash模式为history模式。 require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  routes: constantRoutes // 默认引入静态路由
 })
 
 const router = createRouter()

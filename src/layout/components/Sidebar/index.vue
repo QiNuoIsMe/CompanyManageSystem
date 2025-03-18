@@ -29,13 +29,14 @@ export default {
   components: { SidebarItem, Logo },
   computed: {
     ...mapGetters([
-      'sidebar'
+      'sidebar',
+      'routes'
     ]),
-    //路由信息的计算属性
-    routes() {
-      //当前路由的所有路由信息
-      return this.$router.options.routes
-    },
+    // //路由信息的计算属性
+    // routes() {
+    //   //直接当前路由的所有路由信息。使用 mapGetters 后，routes 数据从 Vuex Store 中获取，因此不再需要这个计算属性
+    //   return this.$router.options.routes
+    // },
     activeMenu() {
       const route = this.$route
       const { meta, path } = route

@@ -1,64 +1,68 @@
 import request from '@/utils/request'
+
 /**
- * 从后端获取组织架构数据
- */
-export function getDepartment(){
-    return request({
-        url:'/company/department'//后端接口文档的获取部门列表的地址https://www.apifox.cn/apidoc/shared-e2644216-aad4-4529-a630-78f0631ab076/api-45197364
-    })
+ *
+ * 获取组织架构数据
+ *
+*/
+export function getDepartment() {
+  return request({
+    url: '/company/department'
+  })
 }
 
 /**
- * 
- * 从后端获取部门负责人 数据(封装api接口)
- */
-export function getManagerList(){
-    return request({
-        url:'/sys/user/simple'//后端接口文档的获取部门负责人列表的地址
-    })
+ *
+ *  获取部门负责人的数据
+ * **/
+
+export function getManagerList() {
+  return request({
+    url: '/sys/user/simple'
+  })
 }
 
 /**
- * 
- * 新增部门
- */
-export function addDepartment(data) { 
-    return request({
-        url:'/company/department',//后端接口文档的新增部门的地址，需要查看参数
-        method:'post',
-        data//data:data
-    })
-    
- }
+ * 新增组织
+ * ***/
+export function addDepartment(data) {
+  return request({
+    method: 'post',
+    url: '/company/department',
+    data
+  })
+}
 
- /**
- * 
+/**
  * 获取部门详情
- */
-export function getDepartmentDetail(id){
-    return request({
-        url:`/company/department/${id}`//反引号``创建模板字符串，${}动态内容插入，避免字符串拼接('/company/department/'+id)
-    })
-}
- /**
- * 
- * 修改/更新部门
- */
-export function updateDepartment(data){
-    return request({
-        url: `/company/department/${data.id}`,//反引号``
-        method:'put',
-        data
-    })
+ *
+ * ***/
 
+export function getDepartmentDetail(id) {
+  return request({
+    url: `/company/department/${id}`
+  })
 }
- /**
- * 
+
+/** *
+ * 更新部门
+ * ***/
+export function updateDepartment(data) {
+  return request({
+    method: 'put',
+    url: `/company/department/${data.id}`,
+    data
+  })
+}
+
+/**
  * 删除部门
- */
-export function delDepartment(id) { 
-    return request({
-        url: `/company/department/${id}`,//反引号``
-        method:'delete'
-    })
- }
+ *
+*/
+
+export function delDepartment(id) {
+  return request({
+    method: 'delete',
+    url: `/company/department/${id}`
+  })
+}

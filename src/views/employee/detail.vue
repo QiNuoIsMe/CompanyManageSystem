@@ -1,106 +1,111 @@
 <template>
-    <div class="dashboard-container">
-      <div class="app-container">
-        <div class="edit-form">
-            <!--绑定表单数据和属性-->
-          <el-form ref="userForm" :model="userInfo" :rules="rules" label-width="220px">
-            <!-- 姓名 部门 -->
-            <el-row>
-              <el-col :span="12">
-                <!-- label属性为表单项的标签文本，prop属性为表单项的字段名,用于指定当前表单项的验证规则。 -->
-                <el-form-item label="姓名" prop="username">
-                  <el-input v-model="userInfo.username" size="mini" class="inputW" />
-                </el-form-item>
-              </el-col>
-  
-            </el-row>
-            <!-- 工号 入职时间 -->
-            <el-row>
-              <el-col :span="12">
-                <el-form-item label="工号" prop="workNumber">
-                    <!-- 工号是系统生成的，！！！disabled属性为表单项的禁用状态，表示禁用这个组件(只能看，不能写) -->
-                  <el-input disabled v-model="userInfo.workNumber" size="mini" class="inputW" />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <!--手机 聘用形式  -->
-            <el-row>
-              <el-col :span="12">
-                <el-form-item label="手机" prop="mobile">
-                  <el-input
-                  v-model="userInfo.mobile"
-                    size="mini"
-                    class="inputW"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="12">
-                <el-form-item label="部门" prop="departmentId">
-                  <!-- 放置及联部门组件 -->
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="12">
-                <el-form-item label="聘用形式" prop="formOfEmployment">
-                  <el-select v-model="userInfo.formOfEmployment" size="mini" class="inputW">
-                    <el-option label="正式" :value="1"></el-option>
-                    <el-option label="非正式" :value="2"></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="12">
-                <el-form-item label="入职时间" prop="timeOfEntry">
-                  <el-date-picker
-                    v-model="userInfo.timeOfEntry"
-                    size="mini"
-                    type="date"
-                    value-format="yyyy-MM-dd"
-                    class="inputW"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="12">
-                <el-form-item label="转正时间" prop="correctionTime">
-                  <el-date-picker
-                    v-model="userInfo.correctionTime"
-                    size="mini"
-                    type="date"
-                    class="inputW"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <!-- 员工照片 -->
-            <el-row>
-              <el-col :span="12">
-                <el-form-item label="员工头像">
-                  <!-- 放置上传图片 -->
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <!-- 保存个人信息 -->
-            <el-row type="flex">
-              <el-col :span="12" style="margin-left:220px">
-                <el-button size="mini" type="primary" @click="saveData">保存更新</el-button>
-              </el-col>
-            </el-row>
-          </el-form>
-        </div>
-  
-      </div>
-    </div>
-  </template>
-  
-  <script>
+  <div class="dashboard-container">
+    <div class="app-container">
+      <div class="edit-form">
+        <el-form ref="userForm" :model="userInfo" :rules="rules" label-width="220px">
+          <!-- 姓名 -->
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="姓名" prop="username">
+                <el-input v-model="userInfo.username" size="mini" class="inputW" />
+              </el-form-item>
+            </el-col>
 
+          </el-row>
+          <!-- 工号 -->
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="工号" prop="workNumber">
+                <!-- 工号是系统生成的  禁用这个组件-->
+                <el-input v-model="userInfo.workNumber" disabled size="mini" class="inputW" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!--手机  -->
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="手机" prop="mobile">
+                <el-input
+                  v-model="userInfo.mobile"
+                  :disabled="!!$route.params.id"
+                  size="mini"
+                  class="inputW"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="部门" prop="departmentId">
+                <!-- 放置及联部门组件 会单独封装-->
+                <!-- inputW样式会给到selectTree中 template第一层的组件 -->
+                <select-tree v-model="userInfo.departmentId" class="inputW" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="聘用形式" prop="formOfEmployment">
+                <el-select v-model="userInfo.formOfEmployment" size="mini" class="inputW">
+                  <el-option label="正式" :value="1" />
+                  <el-option label="非正式" :value="2" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="入职时间" prop="timeOfEntry">
+                <el-date-picker
+                  v-model="userInfo.timeOfEntry"
+                  size="mini"
+                  type="date"
+                  value-format="yyyy-MM-dd"
+                  class="inputW"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="转正时间" prop="correctionTime">
+                <el-date-picker
+                  v-model="userInfo.correctionTime"
+                  size="mini"
+                  type="date"
+                  class="inputW"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!-- 员工照片 -->
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="员工头像">
+                <!-- 放置上传图片 -->
+                <image-upload v-model="userInfo.staffPhoto" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!-- 保存个人信息 -->
+          <el-row type="flex">
+            <el-col :span="12" style="margin-left:220px">
+              <el-button size="mini" type="primary" @click="saveData">保存更新</el-button>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<script>
+import SelectTree from './components/select-tree.vue'
+import ImageUpload from './components/image-upload.vue'
+import { addEmployee, getEmployeeDetail, updateEmployee } from '@/api/employee'
 export default {
+  components: { SelectTree, ImageUpload },
   data() {
     return {
       userInfo: {
@@ -110,7 +115,8 @@ export default {
         formOfEmployment: null, // 聘用形式
         departmentId: null, // 部门id
         timeOfEntry: '', // 入职时间
-        correctionTime: '' // 转正时间
+        correctionTime: '', // 转正时间
+        staffPhoto: ''
       },
       rules: {
         username: [{ required: true, message: '请输入姓名', trigger: 'blur' }, {
@@ -140,22 +146,45 @@ export default {
 
     }
   },
+  created() {
+    // 如何获取路由参数的中id
+    // if (this.$route.params.id) { this.getEmployeeDetail() }
+    this.$route.params.id && this.getEmployeeDetail()
+  },
   methods: {
-    //校验整个表单
+    async getEmployeeDetail() {
+      this.userInfo = await getEmployeeDetail(this.$route.params.id)
+    },
     saveData() {
-      this.$refs.userForm.validate()
+      this.$refs.userForm.validate(async isOK => {
+        if (isOK) {
+          // 编辑模式
+          if (this.$route.params.id) {
+            // 编辑模式
+            await updateEmployee(this.userInfo)
+            this.$message.success('更新员工成功')
+          } else {
+            // 新增模式
+            // 校验通过
+            await addEmployee(this.userInfo)
+            this.$message.success('新增员工成功')
+          }
+          this.$router.push('/employee')
+        }
+      })
     }
   }
 }
 </script>
-  
+
   <style scoped lang="scss">
-      .edit-form {
-        background: #fff;
-        padding: 20px;
-        .inputW {
-          width: 380px
-        }
-      }
-  
+  .edit-form {
+    background: #fff;
+    padding: 20px;
+    .inputW {
+      width: 380px
+    }
+  }
+
   </style>
+

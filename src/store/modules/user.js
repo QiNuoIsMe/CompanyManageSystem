@@ -1,9 +1,11 @@
 import { getUserInfo, login } from '@/api/user'
+import { constantRoutes, resetRouter } from '@/router'
 import { getToken, removeToken, setToken } from '@/utils/auth'
 const state={ //------管理应用的状态state------
   token:getToken(),//从缓存中读取初始值
   // token:null
-  userInfo:{}//存储用户资料的状态
+  userInfo:{},//存储用户资料的状态
+  routes: constantRoutes//静态路由的数组
 }
 
 const mutations={ //-----修改状态的方法mutations------
@@ -19,6 +21,9 @@ const mutations={ //-----修改状态的方法mutations------
   },
   setUserInfo(state,userInfo){
     state.userInfo = userInfo//将用户信息存储到state中//通过mutation设置用户信息状态state
+  },
+  setRoutes(state,newRoutes){
+    state.routes = [...constantRoutes,...newRoutes]//更新state，静态路由 + 动态路由(两个都要加...拷贝对象)
   }
 }
 
@@ -37,11 +42,14 @@ const actions={// -----异步操作actions-------
   async getUserInfo(context){
     const result = await getUserInfo()//导入api/user.js中的getUserInfo方法
     context.commit("setUserInfo",result)//调用mutation中setUserInfo方法，进行提交(将数据共享到vuex上)
+    return result//Vuex用户模块action中返回result信息
   },
   //退出登录
   logout(context){
     context.commit('removeToken')//删除token
     context.commit('setUserInfo',{})//将用户信息设置为空
+    //重置路由,清除上一个用户的路由权限
+    resetRouter()
   }
 }
 
